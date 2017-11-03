@@ -27,6 +27,8 @@ function GMapsConnection() {
     var bTraficLayer = false;
     var bounds = null;
     var markers = [];
+    var circles = [];
+    var polygons = [];
     var hidden = false;
     var timerId = null;
     var animated = false;
@@ -317,6 +319,18 @@ function GMapsConnection() {
             }
             markers = [];
         }
+        if (circles.length > 0) {
+            for (var i = 0; i < circles.length; i++) {
+                circles[i].setMap(null);
+            }
+            circles = [];
+        }
+        if (polygons.length > 0) {
+            for (var i = 0; i < polygons.length; i++) {
+                polygons[i].setMap(null);
+            }
+            polygons = [];
+        }
     }
 
     /**
@@ -334,11 +348,10 @@ function GMapsConnection() {
             strokeOpacity: 0.8,
             strokeWeight: 4,
             fillColor: color,
-            fillOpacity: 0.35
+            fillOpacity: 0.35,
+            map: map
         });
-
-        console.info("Method in development");
-        console.info(localPo);
+        polygons.push(localPo);
     }
 
     /**
@@ -361,9 +374,7 @@ function GMapsConnection() {
             center: center,
             radius: radius
         });
-
-        console.info("Method in development");
-        console.info(localCir);
+        circles.push(localCir);
     }
 
     /* ******************************************** PRIVATE FUNCTIONS ************************************************ */

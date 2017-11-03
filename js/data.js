@@ -3,6 +3,8 @@ function GpsDataFactor() {
     const pointsContent = "<h4>Lorem ipsum</h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sagittis vehicula ornare. Integer imperdiet libero nec mauris congue, vitae porttitor nisl luctus.</p>";
 
     this.LoadRouteData = function () {
+        gpsData = [];
+
         gpsData.push({
             lat: -30.028491,
             lng: -51.199785,
@@ -59,4 +61,32 @@ function GpsDataFactor() {
 
         return gpsData;
     }
+
+    this.CirclePoint = {
+        lat: -30.022409,
+        lng: -51.210612
+    };
+
+    this.PolygonCoordList = [
+        {
+            lat: -30.022127,
+            lng: -51.184079
+        },
+        {
+            lat: -30.021179,
+            lng: -51.181118
+        },
+        {
+            lat: -30.021718,
+            lng: -51.178479
+        },
+        {
+            lat: -30.023808,
+            lng: -51.179123
+        },
+        {
+            lat: -30.025043,
+            lng: -51.182385
+        },
+    ];
 }

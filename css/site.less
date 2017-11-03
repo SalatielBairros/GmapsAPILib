@@ -1,20 +1,59 @@
+@nice-dark-bg: #343a40;
+@nice-white-fc: rgb(233, 233, 233);
+
+.horizontal-bar{
+    width: 100%;
+    background-color: @nice-dark-bg;
+}
+
+.btn-format{
+    color: @nice-white-fc;
+    font-weight: bold;
+}
+
 body{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 
     header{
         nav{
-            width: 100%;
-            height: 50px;
-            background-color: #343a40;
+            .horizontal-bar;
+            height: 50px;           
 
             a.title{                
-                color: #FDFDFD;
-                font-weight: bold;
+                .btn-format;
                 display: inline-block;
                 padding-top: .9rem;
                 padding-bottom: .3125rem;
                 margin-left: 10px;
                 text-decoration: none;
+
+                &:hover{
+                    color: #FFF;
+                }
+            }
+
+            ul{
+                list-style-type: none;                
+                overflow: hidden;
+                background-color: @nice-dark-bg;
+                display: inline-block;
+                vertical-align: top;
+
+                li{
+                    float: left;
+
+                    a{
+                        font-weight: 200 !important;                        
+                        text-align: center;
+                        padding: 14px 16px;
+                        text-decoration: none;
+                        height: 30px;
+
+                        &:hover {
+                            background-color: #111;
+                        }
+                    }
+                }
             }
         }
     }
@@ -22,9 +61,51 @@ body{
     main{
         padding: 1%;
 
+        section{
+            &.top-map-btn{
+                width: 100%;
+                background-color: rgba(243, 243, 243, 0.4);                
+                height: 50px;
+                margin: 5px 0 5px 0;
+
+                input[type=button]{
+                    .btn-format;
+                    background-color: @nice-dark-bg;                    
+                    padding: 10px;
+                    float: right;
+                    vertical-align: middle;
+                    margin-top: 7px;                    
+                    cursor: pointer;
+
+                    &:hover{
+                        background-color: #5e6063;
+                    }
+                }                
+            }
+        }
+
         #map{
-            height: 400px;
+            height: 450px;
             width: 100%;
+        }
+    }
+
+    footer{
+        .horizontal-bar;
+        height: 20px;     
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        
+        span{
+            font-size: 11px;
+            float: right;
+            color: @nice-white-fc;
+            padding: 5px;
+
+            a{
+                color: @nice-white-fc;
+            }
         }
     }
 }
