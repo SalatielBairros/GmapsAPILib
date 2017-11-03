@@ -14,17 +14,25 @@
         <nav>
             <a class="title no-link" title="Google Maps API Library">GMaps API Library</a>
             <ul>
-                <li><a href="index.html" class="title" title="Initial Map">Initial</a></li>
-                <li><a href="route.html" class="title active" title="Route Map">Route</a></li>
+                <li>
+                    <a href="index.html" class="title" title="Initial Map">Initial</a>
+                </li>
+                <li>
+                    <a href="route.html" class="title active" title="Route Map">Route</a>
+                </li>
             </ul>
         </nav>
     </header>
     <main>
         <h4>Route</h4>
         <section class="top-map-btn">
+            <strong>TOTAL:
+                <span id="sTotalKmMap"></span>
+            </strong>
             <input type="button" id="btnMapAction" value="Clean" class="clean-map" />
         </section>
-        <div id="map"></div>
+        <div id="map" class="w70"></div>
+        <div id="directionsPanel" class="w30"></div>
     </main>
     <footer>
         <span>

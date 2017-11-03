@@ -43,5 +43,5 @@ function SetDataToMap() {
         gpsConnection.SetMapData(gpsData, 0);
     }
 
-    gpsConnection.CreatePolylines("#FF0000");    
+    gpsConnection.MakeRoute();    
 }

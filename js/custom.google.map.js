@@ -69,7 +69,13 @@ function GMapsConnection() {
         directionsService = new gmaps.DirectionsService;
         directionsDisplay = new gmaps.DirectionsRenderer;
         directionsDisplay.setMap(map);
-        directionsDisplay.setOptions({ suppressMarkers: true });
+        directionsDisplay.setOptions({ suppressMarkers: true, draggable: true });
+
+        if ($("#sTotalKmMap").length > 0) {
+            directionsDisplay.addListener('directions_changed', function () {
+                computeTotalDistance(directionsDisplay.getDirections());
+            });
+        }
     }
 
     /**
@@ -245,10 +251,17 @@ function GMapsConnection() {
 
     /**
      * Create an GMaps Route based on GpsData.
-     * @see gpsData
+     * @param {Date} depTime - Arrive date
+     * @param {Boolean} sort - Defines if the points of the route will be reordenaded.
+     * @param {Boolean} avTolls - Defines if Tolls should be avoided.
+     * @see gpsData     
      */
-    this.MakeRoute = function () {
-        console.info("Method in development");
+    this.MakeRoute = function (depTime, sort, avTolls, panel) {
+        depTime = depTime || new Date();
+        sort = sort || true;
+        avTolls = avTolls || false;
+        panel = panel || false;
+
         if (gpsData != null && gpsData.length > 0) {
             var first = gpsData[0];
             gpsData.splice(0, 1);
@@ -269,19 +282,23 @@ function GMapsConnection() {
             directionsService.route({
                 origin: { lat: first.lat, lng: first.lng },
                 destination: { lat: last.lat, lng: last.lng },
-                waypoints: wPoints,
-                provideRouteAlternatives: false,
-                optimizeWaypoints: false,
                 travelMode: gmaps.TravelMode.DRIVING,
                 drivingOptions: {
-                    departureTime: new Date(/* now, or future date */)
+                    departureTime: depTime
                 },
-                unitSystem: gmaps.UnitSystem.METRIC
+                unitSystem: gmaps.UnitSystem.METRIC,
+                waypoints: wPoints,
+                optimizeWaypoints: sort,
+                provideRouteAlternatives: true,
+                avoidHighways: false,
+                avoidTolls: avTolls,
+                region: 'br'
             }, function (response, status) {
                 if (status === gmaps.DirectionsStatus.OK) {
+                    directionsDisplay.setPanel(document.getElementById('directionsPanel'));
                     directionsDisplay.setDirections(response);
-                    //var route = response.routes[0];
                 } else {
+                    //TODO: Handle the others status.
                     window.alert("Erro to load route: " + status);
                 }
             });
@@ -331,6 +348,12 @@ function GMapsConnection() {
                 polygons[i].setMap(null);
             }
             polygons = [];
+        }
+
+        try {
+            directionsDisplay.setDirections({ routes: [] });
+        } catch (error) {
+            console.log("Error clean routes.");
         }
     }
 
@@ -383,6 +406,16 @@ function GMapsConnection() {
     }
 
     /* ******************************************** PRIVATE FUNCTIONS ************************************************ */
+
+    function computeTotalDistance(result) {
+        var total = 0;
+        var myroute = result.routes[0];
+        for (var i = 0; i < myroute.legs.length; i++) {
+            total += myroute.legs[i].distance.value;
+        }
+        total = total / 1000;
+        document.getElementById('sTotalKmMap').innerHTML = total + ' km';
+    }
 
     function getLocation() {
         var infoWindow = new google.maps.InfoWindow({ map: map });

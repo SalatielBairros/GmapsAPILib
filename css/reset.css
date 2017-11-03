@@ -16,3 +16,12 @@ input{
 a.no-link{
     cursor: default;
 }
+
+.w70{
+    width: 68% !important;
+    display: inline-block;
+}
+
+.w30{
+    width: 29% !important;
+}

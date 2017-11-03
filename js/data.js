@@ -53,10 +53,19 @@ function GpsDataFactor() {
         gpsData.push({
             lat: -30.019622,
             lng: -51.195423,
-            title: 'FINAL POINT',
+            title: 'FIFTH POINT',
             icon: '5',
             content: pointsContent,
             idGps: 6
+        });
+
+        gpsData.push({
+            lat: -30.019433,
+            lng: -51.177604,
+            title: 'FINAL POINT',
+            icon: '6',
+            content: pointsContent,
+            idGps: 7
         });
 
         return gpsData;
