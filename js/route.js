@@ -43,7 +43,5 @@ function SetDataToMap() {
         gpsConnection.SetMapData(gpsData, 0);
     }
 
-    gpsConnection.CreatePolylines("#FF0000");
-    gpsConnection.CreateCircle(gpsDataFactor.CirclePoint, 200);
-    gpsConnection.CreatePolygon(gpsDataFactor.PolygonCoordList, "#00FF00");    
+    gpsConnection.CreatePolylines("#FF0000");    
 }

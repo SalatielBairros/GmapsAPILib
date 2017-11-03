@@ -43,7 +43,8 @@ body header nav ul li a {
   text-decoration: none;
   height: 30px;
 }
-body header nav ul li a:hover {
+body header nav ul li a:hover,
+body header nav ul li a.active {
   background-color: #111;
 }
 body main {

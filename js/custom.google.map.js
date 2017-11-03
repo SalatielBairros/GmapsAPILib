@@ -63,6 +63,7 @@ function GMapsConnection() {
 
         setTrafficControlLayer();
         createCenterMapControl();
+        createLocationControl();
         setRoutesButtom();
 
         directionsService = new gmaps.DirectionsService;
@@ -224,7 +225,7 @@ function GMapsConnection() {
         centerMap();
     }
 
-    this.CenterMapOnPosition = function(gpsId) {
+    this.CenterMapOnPosition = function (gpsId) {
         if (gpsId !== null && gpsId > 0) {
             var retFilter = gpsData.filter(function (d) { return d.idGps === gpsId; });
 
@@ -377,7 +378,41 @@ function GMapsConnection() {
         circles.push(localCir);
     }
 
+    this.GetUserLocation = function () {
+        getLocation();
+    }
+
     /* ******************************************** PRIVATE FUNCTIONS ************************************************ */
+
+    function getLocation() {
+        var infoWindow = new google.maps.InfoWindow({ map: map });
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                infoWindow.setPosition(pos);
+                infoWindow.setContent('&#x25C9;');
+                map.setCenter(pos);
+            }, function () {
+                handleLocationError(true, infoWindow, map.getCenter());
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+        }
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.');
+    }
 
     /**
      * Toggles the visibility of tracking markers.
@@ -521,7 +556,7 @@ function GMapsConnection() {
         var centerControlDiv = document.createElement("div");
         centerControl(centerControlDiv, map);
 
-        centerControlDiv.index = 1;
+        centerControlDiv.index = 2;
         map.controls[gmaps.ControlPosition.RIGHT_BOTTOM].push(centerControlDiv);
     }
 
@@ -563,7 +598,7 @@ function GMapsConnection() {
         var centerControlDiv = document.createElement("div");
         centerControl(centerControlDiv, map);
 
-        centerControlDiv.index = 1;
+        centerControlDiv.index = 3;
         map.controls[gmaps.ControlPosition.RIGHT_BOTTOM].push(centerControlDiv);
     }
 
@@ -603,8 +638,48 @@ function GMapsConnection() {
         var centerControlDiv = document.createElement("div");
         centerControl(centerControlDiv, map);
 
-        centerControlDiv.index = 1;
+        centerControlDiv.index = 4;
         map.controls[gmaps.ControlPosition.RIGHT_BOTTOM].push(centerControlDiv);
+    }
+
+    function createLocationControl() {
+
+        function locationControl(controlDiv) {
+
+            // Set CSS for the control border.
+            var controlUi = document.createElement("div");
+            controlUi.style.backgroundColor = "#fff";
+            controlUi.style.border = "2px solid #fff";
+            controlUi.style.borderRadius = "3px";
+            controlUi.style.boxShadow = "0 1px 2px rgba(0,0,0,.3)";
+            controlUi.style.cursor = "pointer";
+            controlUi.style.marginBottom = "5px";
+            controlUi.style.marginRight = "8px";
+            controlUi.style.textAlign = "center";
+            controlUi.title = "Localização atual.";
+            controlDiv.appendChild(controlUi);
+
+            // Set CSS for the control interior.
+            var controlText = document.createElement("div");
+            controlText.style.color = "rgb(25,25,25)";
+            controlText.style.fontFamily = "Roboto,Arial,sans-serif";
+            controlText.style.fontSize = "13px";
+            controlText.style.lineHeight = "30px";
+            controlText.style.paddingLeft = "10px";
+            controlText.style.paddingRight = "10px";
+            controlText.innerHTML = '&#x25C9;';
+            controlUi.appendChild(controlText);
+
+            controlUi.addEventListener("click", function () {
+                getLocation();
+            });
+        }
+
+        var locationControlDiv = document.createElement("div");
+        locationControl(locationControlDiv, map);
+
+        locationControlDiv.index = 1;
+        map.controls[gmaps.ControlPosition.RIGHT_BOTTOM].push(locationControlDiv);
     }
 
     function setAnimatedMarkers(timeout) {
