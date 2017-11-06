@@ -38,7 +38,7 @@ function SetDataToMap() {
     try {
         gpsConnection.SetMapData(gpsDataFactor.LoadRouteData(), 0);
     } catch (e) {
-        console.warn("Retentativa de carregamento");
+        console.warn("Reload attempt");
         StartMapLoad();
         gpsConnection.SetMapData(gpsData, 0);
     }

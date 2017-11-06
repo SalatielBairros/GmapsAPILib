@@ -1,7 +1,7 @@
 /*!
 * Custom GMaps Library
 * Author: Salatiel Bairros
-* Copyright (c) 2016 - 2017 Softmóvel
+* Copyright (c) 2016 - 2017
 */
 function GMapsConnection() {
 
