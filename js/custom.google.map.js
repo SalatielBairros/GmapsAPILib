@@ -24,6 +24,7 @@ function GMapsConnection() {
     var directionsService = null;
     var directionsDisplay = null;
     var polylines = null;
+    var geocoder = null;
     var bTraficLayer = false;
     var bounds = null;
     var markers = [];
@@ -32,14 +33,17 @@ function GMapsConnection() {
     var hidden = false;
     var timerId = null;
     var animated = false;
+    var useGeocoding = false;
 
     /* ******************************************** PUBLIC METHODS ************************************************ */
 
     /**
       * Start GMap API on #map element with zoom 6.
       * It Includes: TrafficLayer and CenterMapControl      
+     * @param {Boolean} geocoding - Defines if the library will use geocoding on markers.
       */
-    this.StartMap = function () {
+    this.StartMap = function (geocoding) {
+        useGeocoding = geocoding || false;
         gmaps = google.maps;
         map = new gmaps.Map(document.getElementById("map"), {
             center: {
@@ -405,7 +409,36 @@ function GMapsConnection() {
         getLocation();
     }
 
+    /**
+     * @param {Object} latLng - Coordinates to find adress.
+     * @param {function} callbackSuccess - Action to do after GMaps return, if it returns success.
+     * @param {function} callback - Action to do after GMaps return, with or without success.
+     */
+    this.GetEndByLatLong = function (latLng, callbackSuccess, callback) {
+        callbackSuccess = callbackSuccess || function (resp) { };
+        callback = callback || function () { };
+        getEndByCoordinates(latLng, callbackSuccess, callback);
+    }
+
     /* ******************************************** PRIVATE FUNCTIONS ************************************************ */
+
+    function getEndByCoordinates(latLng, callbackSuccess, callback) {
+        if (geocoder == null) geocoder = new gmaps.Geocoder;
+        geocoder.geocode({ 'location': latLng }, function (results, status) {
+            if (status === 'OK') {
+                if (results.length > 0) {
+                    callbackSuccess(results);
+                } else {
+                    console.warn("No results found");
+                }
+            } else {
+                console.error("Adrress was not found.")
+                console.error(status);
+                console.error(results);
+            }
+            callback();
+        });
+    }
 
     function computeTotalDistance(result) {
         var total = 0;
@@ -488,6 +521,7 @@ function GMapsConnection() {
      * @param {String} popupContent - Marker Popup HTML content. Default is empty.
      * @param {Boolean} mDraggable - True if the marker is draggable. Default is true.
      * @param {Number} idGps - The ID of the GPS record on Database.
+     * @param {Boolean} getEnd - Defines if this function will call Geocoding service.
      */
     function addMarker(latitude, longitude, tooltip, mIcon, popupContent, mDraggable, idGps) {
         tooltip = tooltip || "";
@@ -505,13 +539,28 @@ function GMapsConnection() {
                 animation: gmaps.Animation.DROP,
                 draggable: mDraggable,
                 icon: iconPath,
-                idGps: idGps
+                idGps: idGps,
+                end: false
             });
 
             marker.addListener("click", function () {
-                mainInfoWindow.setContent(popupContent);
-                mainInfoWindow.open(map, marker);
+                if (marker.end == false && useGeocoding) {
+                    getEndByCoordinates(myLatlng, function (results) {
+                        popupContent += "<p>" + results[0].formatted_address + "</p>";
+                        marker.end = true;
+                    }, function () {
+                        mainInfoWindow.setContent(popupContent);
+                        mainInfoWindow.open(map, marker);
+                    });
+                } else {
+                    mainInfoWindow.setContent(popupContent);
+                    mainInfoWindow.open(map, marker);
+                }
             });
+
+
+
+
 
             markers.push(marker);
         } else {

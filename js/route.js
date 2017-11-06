@@ -29,7 +29,7 @@ function LoadEvents() {
 
 function StartMapLoad() {
     //gpsConnection = new GMapsConnection();
-    gpsConnection.StartMap();
+    gpsConnection.StartMap(true);
     gpsConnection.CreateAnimatePolylineControl();
     SetDataToMap();
 }

@@ -3,7 +3,7 @@ This library was created for study purposes, but can be helpful to use Google Ma
 
 ## API Info
 ### Google Maps Directions API
-* Origem + 23 pontos referência + destino;
-* 2500 solicitações gratuítas por dia, com máximo de 100 mil custando U$$ 0.50 cada 1000;
-* 50 consultas por segundo;
-* Pode retornar mais de um itinerário possível por solicitação;
+* Origin + 23 ref. points + destination;
+* 2.500 free requests by day, max 100.000 for U$$ 0.50 each 1000;
+* 50 requests by second;
+* Can return more than one possible route by request;
